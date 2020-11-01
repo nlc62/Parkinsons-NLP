@@ -19,5 +19,5 @@ Scripts
     moviereview.py Implementation of dataset.py, used for movie review data.
     
     
-Added IBM Tone Analyzer model to run through sentiment_models.py
+Added Vader and IBM Tone Analyzer models to run through sentiment_models.py
     
