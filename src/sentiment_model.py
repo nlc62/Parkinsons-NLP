@@ -4,11 +4,12 @@ from vader_final import vader_dataset
 from vader_final import run_vader
 from vader_final import confusion_metrics
 from tone_analyzer_final import run_tone_analyzer
+from microsoft_azure_final import *
 
 parser = argparse.ArgumentParser(description='VADER model creation')
 
-parser.add_argument('model', action='store', choices=['vader', 'stanford-corenlp', 'tone-analyzer'],
-                    help='Models: vader, stanford-corenlp, IBM tone analyzer (tone-analyzer) runs on MELD and Mosei dataset')
+parser.add_argument('model', action='store', choices=['vader', 'stanford-corenlp', 'tone-analyzer', 'microsoft-azure'],
+                    help='Models: vader, Microsoft Azure, stanford-corenlp, IBM tone analyzer (tone-analyzer) runs on MELD and Mosei dataset')
 
 parser.add_argument('dataset', action='store', choices=['ms', 'm', 'pd', 'mosi', 'meld', 'mosei'],
                     help='Datasets: movie review sentences (ms), movie review (m), \
@@ -37,7 +38,7 @@ if model == 'vader':
     review_dict = run_vader(sentences, ground_truth_list)
     print(review_dict)
 
-    if calc_metrics == True:
+    if calc_metrics:
         confusion_metrics = confusion_metrics(review_dict)
         print(confusion_metrics)
 
@@ -70,7 +71,21 @@ elif model == 'tone-analyzer':
         print('Happiness Complete Match Accuracy: ' + str(happiness_comp))
         print('No-Emotion Percentage: ' + str(missed))
     
+elif model == 'microsoft-azure':
+    sentences, ground_truth = sentiment_dataset(dataset_name, n_texts)
+    #json_sentences = preprocess_text(sentences)
+    #print(json_sentences)
+    #sentiment_dict = run_azure(json_sentences)
+    #print(sentiment_dict)
+    #sentiment_labels = analyze_azure_results(sentiment_dict)
+    #print(sentiment_labels)
+    #confusion_matrix = preprocess_results(sentiment_labels, ground_truth)
+    confusion_matrix = preprocess_results_from_files('azure_results/', 30, 'pd', ground_truth)   
+    print(confusion_matrix)
 
-
+    if calc_metrics:
+        confusion_metrics = confusion_metrics(confusion_matrix)
+        print(confusion_metrics)
+    
 
 
